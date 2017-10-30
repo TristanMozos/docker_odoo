@@ -1,5 +1,5 @@
-FROM debian:jessie
-MAINTAINER Odoo S.A. <info@odoo.com>
+FROM odoo:10
+MAINTAINER Halltic eSolutions S.L. 
 
 # Install some deps, lessc and less-plugin-clean-css, and wkhtmltopdf
 RUN set -x; \
