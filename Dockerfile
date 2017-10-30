@@ -22,7 +22,7 @@ RUN set -x; \
         && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false npm \
         && rm -rf /var/lib/apt/lists/* wkhtmltox.deb \
         && pip install psycogreen==1.0 \
-        && pip install git+https://github.com/TristanMozos/python-amazon-mws.git
+        && pip install git+https://github.com/TristanMozos/python-amazon-mws.git \
         && easy_install https://github.com/timotheus/ebaysdk-python/archive/master.zip
 
 # Install Odoo
@@ -34,7 +34,7 @@ RUN set -x; \
         && dpkg --force-depends -i odoo.deb \
         && apt-get update \
         && apt-get -y install -f --no-install-recommends \
-        && rm -rf /var/lib/apt/lists/* odoo.deb
+        && rm -rf /var/lib/apt/lists/* odoo.deb \
         && apt-get purge git
 
 # Copy entrypoint script and Odoo configuration file
