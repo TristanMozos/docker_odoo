@@ -34,8 +34,7 @@ RUN set -x; \
         && dpkg --force-depends -i odoo.deb \
         && apt-get update \
         && apt-get -y install -f --no-install-recommends \
-        && rm -rf /var/lib/apt/lists/* odoo.deb \
-        && apt-get purge git
+        && rm -rf /var/lib/apt/lists/* odoo.deb 
 
 # Copy entrypoint script and Odoo configuration file
 COPY ./entrypoint.sh /
