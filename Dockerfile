@@ -1,4 +1,4 @@
-FROM odoo:10
+FROM debian:jessie
 MAINTAINER Halltic eSolutions S.L. 
 
 # Install some deps, lessc and less-plugin-clean-css, and wkhtmltopdf
