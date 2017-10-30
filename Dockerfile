@@ -13,6 +13,8 @@ RUN set -x; \
             python-renderpm \
             python-support \
             python-watchdog \
+            python-lxml \
+            git \
         && curl -o wkhtmltox.deb -SL http://nightly.odoo.com/extra/wkhtmltox-0.12.1.2_linux-jessie-amd64.deb \
         && echo '40e8b906de658a2221b15e4e8cd82565a47d7ee8 wkhtmltox.deb' | sha1sum -c - \
         && dpkg --force-depends -i wkhtmltox.deb \
@@ -32,6 +34,7 @@ RUN set -x; \
         && apt-get update \
         && apt-get -y install -f --no-install-recommends \
         && rm -rf /var/lib/apt/lists/* odoo.deb
+        && apt-get purge git
 
 # Copy entrypoint script and Odoo configuration file
 COPY ./entrypoint.sh /
