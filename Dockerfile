@@ -23,7 +23,9 @@ RUN set -x; \
         && rm -rf /var/lib/apt/lists/* wkhtmltox.deb \
         && pip install psycogreen==1.0 \
         && pip install git+https://github.com/TristanMozos/python-amazon-mws.git \
-        && easy_install https://github.com/timotheus/ebaysdk-python/archive/master.zip
+        && easy_install https://github.com/timotheus/ebaysdk-python/archive/master.zip \
+        && pip install ptvsd 
+
 
 # Install Odoo
 ENV ODOO_VERSION 10.0
