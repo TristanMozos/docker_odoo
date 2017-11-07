@@ -24,7 +24,17 @@ RUN set -x; \
         && pip install psycogreen==1.0 \
         && pip install git+https://github.com/TristanMozos/python-amazon-mws.git \
         && easy_install https://github.com/timotheus/ebaysdk-python/archive/master.zip \
-        && pip install ptvsd 
+        && pip install ptvsd==3.0.0 pudb wdb 
+
+# Debug Env
+ENV PUDB_RDB_HOST=0.0.0.0 \ 
+	PUDB_RDB_PORT=6899 \ 
+	UNACCENT=true \ 
+	WAIT_DB=true \ 
+	WDB_NO_BROWSER_AUTO_OPEN=True \ 
+	WDB_SOCKET_SERVER=wdb \ 
+	WDB_WEB_PORT=1984 \ 
+	WDB_WEB_SERVER=localhost
 
 
 # Install Odoo
