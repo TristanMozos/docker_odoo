@@ -24,8 +24,7 @@ RUN set -x; \
         && cp wkhtmltox/lib/* /usr/local/lib/ \
         && cp wkhtmltox/bin/* /usr/local/bin/ \
 		&& cp -r wkhtmltox/share/man/man1 /usr/local/share/man/ \
-		&& pip install git+https://github.com/TristanMozos/python-amazon-mws.git \
-        && easy_install https://github.com/timotheus/ebaysdk-python/archive/master.zip
+		&& pip install git+https://github.com/TristanMozos/python-amazon-mws.git
 		
 
 # Install Odoo
