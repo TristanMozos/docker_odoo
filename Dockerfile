@@ -51,7 +51,7 @@ RUN set -x; \
         && git clone -b 10.0 https://github.com/OCA/l10n-spain.git /usr/lib/python2.7/dist-packages/odoo/addons/l10n_es \
         && chown odoo -R /usr/lib/python2.7/dist-packages/odoo/addons/l10n_es \
         && mkdir -p /opt/odoo/addons/partner-contact \
-        && git clone -b 10.0 https://github.com/OCA/partner-contact.git /opt/odoo/addons/partner-contact
+        && git clone -b 10.0 https://github.com/OCA/partner-contact.git /opt/odoo/addons/partner-contact \
         && apt-get -y purgue git
         
 
@@ -59,7 +59,7 @@ RUN set -x; \
 COPY ./entrypoint.sh /
 COPY ./odoo.conf /etc/odoo/
 RUN chown odoo /etc/odoo/odoo.conf \
-    && chown odoo -R /opt/odoo
+	&& chown odoo -R /opt/odoo
 
 # Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
 RUN mkdir -p /mnt/extra-addons \
@@ -74,6 +74,5 @@ ENV ODOO_RC /etc/odoo/odoo.conf
 
 # Set default user when running the container
 USER odoo
-
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["odoo"]
