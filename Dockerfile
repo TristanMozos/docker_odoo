@@ -52,7 +52,7 @@ RUN set -x; \
         && chown odoo -R /usr/lib/python2.7/dist-packages/odoo/addons/l10n_es \
         && mkdir -p /opt/odoo/addons/partner-contact \
         && git clone -b 10.0 https://github.com/OCA/partner-contact.git /opt/odoo/addons/partner-contact \
-        && apt-get -y purgue git
+        && apt-get -y purge git
         
 
 # Copy entrypoint script and Odoo configuration file
