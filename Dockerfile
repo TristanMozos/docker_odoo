@@ -18,14 +18,16 @@ RUN set -x; \
             libssl1.0-dev \
             xz-utils \
             python-lxml \
-            git \
+            easy_install \
         && curl -o wkhtmltox.tar.xz -SL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
         && echo '3f923f425d345940089e44c1466f6408b9619562 wkhtmltox.tar.xz' | sha1sum -c - \
         && tar xvf wkhtmltox.tar.xz \
         && cp wkhtmltox/lib/* /usr/local/lib/ \
         && cp wkhtmltox/bin/* /usr/local/bin/ \
-		&& cp -r wkhtmltox/share/man/man1 /usr/local/share/man/ 
-		
+		&& cp -r wkhtmltox/share/man/man1 /usr/local/share/man/ \
+		&& easy_install https://github.com/jameshiew/python-amazon-mws/archive/master.zip \
+        && easy_install https://github.com/timotheus/ebaysdk-python/archive/master.zip
+        
 
 # Install Odoo
 ENV ODOO_VERSION 11.0
@@ -36,7 +38,8 @@ RUN set -x; \
         && dpkg --force-depends -i odoo.deb \
         && apt-get update \
         && apt-get -y install -f --no-install-recommends \
-        && rm -rf /var/lib/apt/lists/* odoo.deb
+        && rm -rf /var/lib/apt/lists/* odoo.deb \
+        && apt-get purge -y easy_install
 
 # Copy entrypoint script and Odoo configuration file
 RUN pip3 install num2words
