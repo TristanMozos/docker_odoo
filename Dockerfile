@@ -21,9 +21,8 @@ RUN set -x; \
         && apt-get -y install -f --no-install-recommends \
         && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false npm \
         && rm -rf /var/lib/apt/lists/* wkhtmltox.deb \
-        && pip install psycogreen==1.0 \
-        && pip install git+https://github.com/TristanMozos/python-amazon-mws.git \
-        && easy_install https://github.com/timotheus/ebaysdk-python/archive/master.zip \
+        && pip install psycogreen==1.0 \ 
+        && pip install unicodecsv \       
         && pip install ptvsd==3.0.0 pudb wdb
 
 # Debug Env
@@ -48,18 +47,19 @@ RUN set -x; \
         && apt-get -y install -f --no-install-recommends \
         && rm -rf /var/lib/apt/lists/* odoo.deb \
         && rm -R /usr/lib/python2.7/dist-packages/odoo/addons/l10n_es \
-        && git clone -b 10.0 https://github.com/OCA/l10n-spain.git /usr/lib/python2.7/dist-packages/odoo/addons/l10n_es \
-        && chown odoo -R /usr/lib/python2.7/dist-packages/odoo/addons/l10n_es \
+        && mkdir -p /opt/odoo/addons/l10n_es \
+        && git clone -b 10.0 https://github.com/OCA/l10n-spain.git /opt/odoo/addons/l10n_es \
         && mkdir -p /opt/odoo/addons/partner-contact \
         && git clone -b 10.0 https://github.com/OCA/partner-contact.git /opt/odoo/addons/partner-contact \
+        && pip install git+https://github.com/TristanMozos/python-amazon-mws.git \
+        && easy_install https://github.com/timotheus/ebaysdk-python/archive/master.zip \
         && apt-get -y purge git
         
 
 # Copy entrypoint script and Odoo configuration file
 COPY ./entrypoint.sh /
 COPY ./odoo.conf /etc/odoo/
-RUN chown odoo /etc/odoo/odoo.conf \
-	&& chown odoo -R /opt/odoo
+RUN chown odoo /etc/odoo/odoo.conf
 
 # Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
 RUN mkdir -p /mnt/extra-addons \
