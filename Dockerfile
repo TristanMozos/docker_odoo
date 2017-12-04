@@ -51,6 +51,10 @@ RUN set -x; \
         && git clone -b 10.0 https://github.com/OCA/l10n-spain.git /opt/odoo/addons/l10n_es \
         && mkdir -p /opt/odoo/addons/partner-contact \
         && git clone -b 10.0 https://github.com/OCA/partner-contact.git /opt/odoo/addons/partner-contact \
+        && mkdir -p /opt/odoo/addons/delivery-carrier \
+        && git clone -b 10.0 https://github.com/OCA/delivery-carrier.git /opt/odoo/addons/delivery-carrier \
+        && mkdir -p /opt/odoo/addons/sale-workflow \
+        && git clone -b 10.0 https://github.com/OCA/delivery-carrier.git /opt/odoo/addons/sale-workflow \
         && pip install git+https://github.com/TristanMozos/python-amazon-mws.git \
         && easy_install https://github.com/timotheus/ebaysdk-python/archive/master.zip \
         && apt-get -y purge git
