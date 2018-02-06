@@ -23,7 +23,6 @@ RUN set -x; \
         && rm -rf /var/lib/apt/lists/* wkhtmltox.deb \
         && pip install psycogreen==1.0 \ 
         && pip install unicodecsv \
-	&& pip install pysftp \
         && pip install ptvsd==3.0.0 pudb wdb
 
 # Debug Env
