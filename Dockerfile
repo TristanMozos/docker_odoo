@@ -14,6 +14,7 @@ RUN set -x; \
             python-support \
             python-watchdog \
             python-lxml \
+	    python-dev \
             git \
         && curl -o wkhtmltox.deb -SL http://nightly.odoo.com/extra/wkhtmltox-0.12.1.2_linux-jessie-amd64.deb \
         && echo '40e8b906de658a2221b15e4e8cd82565a47d7ee8 wkhtmltox.deb' | sha1sum -c - \
@@ -23,11 +24,9 @@ RUN set -x; \
         && rm -rf /var/lib/apt/lists/* wkhtmltox.deb \
         && pip install psycogreen==1.0 \ 
         && pip install unicodecsv \
+	&& pip install pysftp \
 	&& pip install ptvsd==3.0.0 pudb wdb
 	
-RUN set -x; \
-	pip install pysftp
-
 # Debug Env
 ENV PUDB_RDB_HOST=0.0.0.0 \ 
 	PUDB_RDB_PORT=6899 \ 
