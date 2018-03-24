@@ -28,6 +28,7 @@ RUN set -x; \
         && pip install psycogreen==1.0 \ 
         && pip install unicodecsv \
 	&& pip install unidecode \
+	&& pip install cachetools \
 	&& pip install --upgrade setuptools \
 	&& pip install pysftp \
 	&& pip install ptvsd==3.0.0 pudb wdb
