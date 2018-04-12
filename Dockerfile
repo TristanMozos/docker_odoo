@@ -56,6 +56,14 @@ RUN set -x; \
         && apt-get -y install -f --no-install-recommends \
         && rm -rf /var/lib/apt/lists/* odoo.deb \
         && rm -R /usr/lib/python2.7/dist-packages/odoo/addons/l10n_es \
+        && git clone -b 10.0 https://github.com/OCA/queue.git /tmp/queue \
+        && mv /tmp/queue/queue_job /usr/lib/python2.7/dist-packages/odoo/addons/ \
+        && rm -R /tmp/queue \
+        && git clone -b 10.0 https://github.com/OCA/connector.git /tmp/connector \
+        && mv /tmp/connector/component /usr/lib/python2.7/dist-packages/odoo/addons/ \
+        && mv /tmp/connector/component_event /usr/lib/python2.7/dist-packages/odoo/addons/ \
+        && mv /tmp/connector/connector /usr/lib/python2.7/dist-packages/odoo/addons/ \
+        && rm -R /tmp/connector\
         && mkdir -p /opt/odoo/addons/l10n_es \
         && git clone -b 10.0 https://github.com/OCA/l10n-spain.git /opt/odoo/addons/l10n_es \
         && mkdir -p /opt/odoo/addons/partner-contact \
