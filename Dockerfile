@@ -30,6 +30,7 @@ RUN set -x; \
 	&& pip install unidecode \
 	&& pip install cachetools \
 	&& pip install requests \
+	&& pip install psycopg2 \
 	&& pip install --upgrade setuptools \
 	&& pip install pysftp \
 	&& pip install ptvsd==3.0.0 pudb wdb
