@@ -80,6 +80,8 @@ RUN set -x; \
         && git clone -b 10.0 https://github.com/OCA/product-attribute.git /opt/odoo/addons/product-attribute \
 	    && mkdir -p /opt/odoo/addons/server-tools \
         && git clone -b 10.0 https://github.com/OCA/server-tools.git /opt/odoo/addons/server-tools \
+        && mkdir -p /opt/odoo/addons/bank-payment \
+        && git clone -b 10.0 https://github.com/OCA/bank-payment.git /opt/odoo/addons/bank-payment \
         && easy_install https://github.com/timotheus/ebaysdk-python/archive/master.zip \
         && apt-get -y purge git
 
