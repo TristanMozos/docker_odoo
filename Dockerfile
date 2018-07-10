@@ -62,6 +62,7 @@ RUN set -x; \
         && git clone -b 10.0 https://github.com/OCA/connector.git /tmp/connector \
         && mv /tmp/connector/component /usr/lib/python2.7/dist-packages/odoo/addons/ \
         && mv /tmp/connector/component_event /usr/lib/python2.7/dist-packages/odoo/addons/ \
+        && mv /tmp/connector/connector_base_product /usr/lib/python2.7/dist-packages/odoo/addons/ \
         && mv /tmp/connector/connector /usr/lib/python2.7/dist-packages/odoo/addons/ \
         && rm -R /tmp/connector \
         && git clone -b 10.0 https://github.com/OCA/connector-ecommerce.git /tmp/connector_ecommerce \
