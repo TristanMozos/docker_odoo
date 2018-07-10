@@ -77,9 +77,8 @@ RUN set -x; \
         && git clone -b 10.0 https://github.com/OCA/sale-workflow.git /opt/odoo/addons/sale-workflow \
         && mkdir -p /opt/odoo/addons/product-attribute \
         && git clone -b 10.0 https://github.com/OCA/product-attribute.git /opt/odoo/addons/product-attribute \
-	&& mkdir -p /opt/odoo/addons/server-tools \
+	    && mkdir -p /opt/odoo/addons/server-tools \
         && git clone -b 10.0 https://github.com/OCA/server-tools.git /opt/odoo/addons/server-tools \
-        && pip install mws \
         && easy_install https://github.com/timotheus/ebaysdk-python/archive/master.zip \
         && apt-get -y purge git
 
