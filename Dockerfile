@@ -65,6 +65,9 @@ RUN set -x; \
         && mv /tmp/connector/component_event /usr/lib/python2.7/dist-packages/odoo/addons/ \
         && mv /tmp/connector/connector /usr/lib/python2.7/dist-packages/odoo/addons/ \
         && rm -R /tmp/connector\
+        && git clone -b 10.0 https://github.com/OCA/connector_ecommerce.git /tmp/connector_ecommerce \
+        && mv /tmp/connector_ecommerce/connector_ecommerce /usr/lib/python2.7/dist-packages/odoo/addons/ \
+        && rm -R /tmp/connector_ecommerce\
         && mkdir -p /opt/odoo/addons/l10n_es \
         && git clone -b 10.0 https://github.com/OCA/l10n-spain.git /opt/odoo/addons/l10n_es \
         && mkdir -p /opt/odoo/addons/partner-contact \
@@ -75,7 +78,7 @@ RUN set -x; \
         && git clone -b 10.0 https://github.com/OCA/sale-workflow.git /opt/odoo/addons/sale-workflow \
         && mkdir -p /opt/odoo/addons/product-attribute \
         && git clone -b 10.0 https://github.com/OCA/product-attribute.git /opt/odoo/addons/product-attribute \
-	&& mkdir -p /opt/odoo/addons/server-tools \
+	    && mkdir -p /opt/odoo/addons/server-tools \
         && git clone -b 10.0 https://github.com/OCA/server-tools.git /opt/odoo/addons/server-tools \
         && pip install mws \
         && easy_install https://github.com/timotheus/ebaysdk-python/archive/master.zip \
