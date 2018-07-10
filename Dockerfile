@@ -1,5 +1,5 @@
 FROM debian:jessie
-MAINTAINER Halltic eSolutions S.L. 
+MAINTAINER Halltic eSolutions S.L.
 
 # Install some deps, lessc and less-plugin-clean-css, and wkhtmltopdf
 RUN set -x; \
@@ -15,7 +15,7 @@ RUN set -x; \
             python-watchdog \
             python-lxml \
 	    python-dev \
-	    build-essential \ 
+	    build-essential \
 	    libssl-dev \
 	    libffi-dev \
             git \
@@ -25,24 +25,23 @@ RUN set -x; \
         && apt-get -y install -f --no-install-recommends \
         && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false npm \
         && rm -rf /var/lib/apt/lists/* wkhtmltox.deb \
-        && pip install psycogreen==1.0 \ 
+        && pip install psycogreen==1.0 \
         && pip install unicodecsv \
 	&& pip install unidecode \
 	&& pip install cachetools \
 	&& pip install requests \
-	&& pip install psycopg2 \
 	&& pip install --upgrade setuptools \
 	&& pip install pysftp \
 	&& pip install ptvsd==3.0.0 pudb wdb
-	
+
 # Debug Env
-ENV PUDB_RDB_HOST=0.0.0.0 \ 
-	PUDB_RDB_PORT=6899 \ 
-	UNACCENT=true \ 
-	WAIT_DB=true \ 
-	WDB_NO_BROWSER_AUTO_OPEN=True \ 
-	WDB_SOCKET_SERVER=wdb \ 
-	WDB_WEB_PORT=1984 \ 
+ENV PUDB_RDB_HOST=0.0.0.0 \
+	PUDB_RDB_PORT=6899 \
+	UNACCENT=true \
+	WAIT_DB=true \
+	WDB_NO_BROWSER_AUTO_OPEN=True \
+	WDB_SOCKET_SERVER=wdb \
+	WDB_WEB_PORT=1984 \
 	WDB_WEB_SERVER=localhost
 
 
@@ -64,10 +63,10 @@ RUN set -x; \
         && mv /tmp/connector/component /usr/lib/python2.7/dist-packages/odoo/addons/ \
         && mv /tmp/connector/component_event /usr/lib/python2.7/dist-packages/odoo/addons/ \
         && mv /tmp/connector/connector /usr/lib/python2.7/dist-packages/odoo/addons/ \
-        && rm -R /tmp/connector\
-        && git clone -b 10.0 https://github.com/OCA/connector_ecommerce.git /tmp/connector_ecommerce \
+        && rm -R /tmp/connector \
+        && git clone -b 10.0 https://github.com/OCA/connector-ecommerce.git /tmp/connector_ecommerce \
         && mv /tmp/connector_ecommerce/connector_ecommerce /usr/lib/python2.7/dist-packages/odoo/addons/ \
-        && rm -R /tmp/connector_ecommerce\
+        && rm -R /tmp/connector_ecommerce \
         && mkdir -p /opt/odoo/addons/l10n_es \
         && git clone -b 10.0 https://github.com/OCA/l10n-spain.git /opt/odoo/addons/l10n_es \
         && mkdir -p /opt/odoo/addons/partner-contact \
@@ -78,12 +77,12 @@ RUN set -x; \
         && git clone -b 10.0 https://github.com/OCA/sale-workflow.git /opt/odoo/addons/sale-workflow \
         && mkdir -p /opt/odoo/addons/product-attribute \
         && git clone -b 10.0 https://github.com/OCA/product-attribute.git /opt/odoo/addons/product-attribute \
-	    && mkdir -p /opt/odoo/addons/server-tools \
+	&& mkdir -p /opt/odoo/addons/server-tools \
         && git clone -b 10.0 https://github.com/OCA/server-tools.git /opt/odoo/addons/server-tools \
         && pip install mws \
         && easy_install https://github.com/timotheus/ebaysdk-python/archive/master.zip \
         && apt-get -y purge git
-        
+
 
 # Copy entrypoint script and Odoo configuration file
 COPY ./entrypoint.sh /
