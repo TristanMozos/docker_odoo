@@ -47,10 +47,10 @@ ENV PUDB_RDB_HOST=0.0.0.0 \
 
 # Install Odoo
 ENV ODOO_VERSION 10.0
-ENV ODOO_RELEASE 20170815
+ENV ODOO_RELEASE 20180808
 RUN set -x; \
         curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
-        && echo '08d21e6419a72be7a3ad784df7a6fc8a46bbe7d9 odoo.deb' | sha1sum -c - \
+        && echo '98736953010be3c578f4b9eb1c7e2c87da93a7bd odoo.deb' | sha1sum -c - \
         && dpkg --force-depends -i odoo.deb \
         && apt-get update \
         && apt-get -y install -f --no-install-recommends \
@@ -90,6 +90,7 @@ RUN set -x; \
         && git clone -b 10.0 https://github.com/OCA/server-tools.git /opt/odoo/addons/server-tools \
         && mkdir -p /opt/odoo/addons/bank-payment \
         && git clone -b 10.0 https://github.com/OCA/bank-payment.git /opt/odoo/addons/bank-payment \
+        && git clone -b 10.0 https://github.com/OCA/web.git /opt/odoo/addons/web \
         && easy_install https://github.com/timotheus/ebaysdk-python/archive/master.zip \
         && apt-get -y purge git
 
