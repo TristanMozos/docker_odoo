@@ -78,8 +78,8 @@ RUN set -x; \
         && git clone -b 10.0 https://github.com/OCA/sale-workflow.git /opt/odoo/addons/sale-workflow \
         && mkdir -p /opt/odoo/addons/product-attribute \
         && git clone -b 10.0 https://github.com/OCA/product-attribute.git /opt/odoo/addons/product-attribute \
-        && git clone -b 10.0-product_dimension https://github.com/gurneyalex/product-attribute.git /tmp/product_attribute \
         && rm -R /opt/odoo/addons/product-attribute/product_dimensions \
+        && git clone -b 10.0-product_dimension https://github.com/gurneyalex/product-attribute.git /tmp/product_attribute \
         && mv /tmp/product_attribute/product_dimensions /opt/odoo/addons/product-attribute \
         && rm -R /tmp/product_attribute \
         && git clone -b release/10.0/SMD-216-product_multi_image https://github.com/LasLabs/product-attribute.git /tmp/product_attribute \
