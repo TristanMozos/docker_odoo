@@ -27,12 +27,12 @@ RUN set -x; \
         && rm -rf /var/lib/apt/lists/* wkhtmltox.deb \
         && pip install psycogreen==1.0 \
         && pip install unicodecsv \
-	&& pip install unidecode \
-	&& pip install cachetools \
-	&& pip install requests \
-	&& pip install --upgrade setuptools \
-	&& pip install pysftp \
-	&& pip install ptvsd==3.0.0 pudb wdb
+	    && pip install unidecode \
+	    && pip install cachetools \
+	    && pip install requests \
+	    && pip install --upgrade setuptools \
+	    && pip install pysftp \
+	    && pip install ptvsd==3.0.0 pudb wdb
 
 # Debug Env
 ENV PUDB_RDB_HOST=0.0.0.0 \
@@ -82,7 +82,7 @@ RUN set -x; \
         && rm -R /opt/odoo/addons/product-attribute/product_dimensions \
         && mv /tmp/product_attribute/product_dimensions /opt/odoo/addons/product-attribute \
         && rm -R /tmp/product_attribute \
-        && git clone -b release/10.0/SMD-216-product_multi_image https://github.com/LasLabs/product-attribute.git /tmp/product_attribute
+        && git clone -b release/10.0/SMD-216-product_multi_image https://github.com/LasLabs/product-attribute.git /tmp/product_attribute \
         && rm -R /opt/odoo/addons/product-attribute/product_multi_image \
         && mv /tmp/product_attribute/product_multi_image/ /opt/odoo/addons/product-attribute \
         && rm -R /tmp/product_attribute \
