@@ -56,7 +56,7 @@ RUN set -x; \
         && rm -R /tmp/connector_ecommerce \
         && mkdir -p /opt/odoo/addons/l10n_es \
         && git clone -b 10.0 https://github.com/OCA/l10n-spain.git /opt/odoo/addons/l10n_es \
-        && easy_install https://github.com/timotheus/ebaysdk-python/archive/master.zip
+        && easy_install https://github.com/timotheus/ebaysdk-python/archive/master.zip \
         && apt-get -y purge git
 
 # Copy entrypoint script and Odoo configuration file
