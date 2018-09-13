@@ -26,9 +26,7 @@ RUN set -x; \
 	    && pip install unidecode \
 	    && pip install cachetools \
 	    && pip install requests \
-	    && pip install --upgrade setuptools \
-	    && pip install pysftp
-
+	    && pip install --upgrade setuptools
 
 
 # Install Odoo
