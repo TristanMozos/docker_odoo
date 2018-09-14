@@ -1,0 +1,27 @@
+version: '2'
+services:
+  odoo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: odoo_test
+    depends_on:
+      - db
+    ports:
+      - "0.0.0.0:8069:8069"
+      - "127.0.0.1:6899:6899"
+    volumes:
+      - /opt/odoo/conf:/etc/odoo
+      - /opt/odoo/odoo_addons:/mnt/extra-addons
+    privileged: true
+
+  db:
+    image: postgres:9.4
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+    volumes:
+      - /opt/odoo/database/dev:/var/lib/postgresql/data
+
