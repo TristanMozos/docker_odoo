@@ -26,8 +26,8 @@ RUN set -x; \
 	    && pip install unidecode \
 	    && pip install cachetools \
 	    && pip install requests \
-	    && pip install boto3 \
-	    && pip install --upgrade setuptools
+	    && pip install --upgrade setuptools \
+	    && pip install boto3 
 
 
 # Install Odoo
