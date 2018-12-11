@@ -14,10 +14,10 @@ RUN set -x; \
             python-support \
             python-watchdog \
             python-lxml \
-	    python-dev \
-	    build-essential \
-	    libssl-dev \
-	    libffi-dev \
+	        python-dev \
+	        build-essential \
+	        libssl-dev \
+	        libffi-dev \
             git \
         && curl -o wkhtmltox.deb -SL http://nightly.odoo.com/extra/wkhtmltox-0.12.1.2_linux-jessie-amd64.deb \
         && echo '40e8b906de658a2221b15e4e8cd82565a47d7ee8 wkhtmltox.deb' | sha1sum -c - \
@@ -25,14 +25,18 @@ RUN set -x; \
         && apt-get -y install -f --no-install-recommends \
         && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false npm \
         && rm -rf /var/lib/apt/lists/* wkhtmltox.deb \
+        && pip install --upgrade pip \
+        && pip install boto3==1.4.2 \
+        && pip install botocore==1.4.93 \
         && pip install psycogreen==1.0 \
         && pip install unicodecsv \
 	    && pip install unidecode \
 	    && pip install cachetools \
 	    && pip install requests \
-	    && pip install boto3 \
 	    && pip install --upgrade setuptools \
+	    && pip install paramiko \
 	    && pip install pysftp \
+	    && pip install suds-jurko \
 	    && pip install ptvsd==3.0.0 pudb wdb
 
 # Debug Env
