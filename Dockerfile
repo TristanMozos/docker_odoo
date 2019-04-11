@@ -62,9 +62,6 @@ RUN set -x; \
         && apt-get update \
         && apt-get -y install -f --no-install-recommends \
         && rm -rf /var/lib/apt/lists/* odoo.deb \
-        && apt-get update \
-        && apt-get -y install -f --no-install-recommends \
-        && rm -rf /var/lib/apt/lists/* odoo.deb \
         && rm -R /usr/lib/python2.7/dist-packages/odoo/addons/l10n_es \
         && git clone -b 10.0 https://github.com/OCA/queue.git /tmp/queue \
         && mv /tmp/queue/queue_job /usr/lib/python2.7/dist-packages/odoo/addons/ \
