@@ -32,8 +32,9 @@ RUN apt-get update \
             python3-boto3 \
             python3-botocore \
             xz-utils \
-        && curl -o wkhtmltox.deb -sSL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb \
-        && echo '7e35a63f9db14f93ec7feeb0fce76b30c08f2057 wkhtmltox.deb' | sha1sum -c - \
+            git \
+        && curl -o wkhtmltox.deb -sSL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.buster_amd64.deb \
+        && echo 'ea8277df4297afc507c61122f3c349af142f31e5 wkhtmltox.deb' | sha1sum -c - \
         && apt-get install -y --no-install-recommends ./wkhtmltox.deb \
         && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
 
@@ -56,8 +57,8 @@ RUN npm install -g rtlcss
 
 # Install Odoo
 ENV ODOO_VERSION 13.0
-ARG ODOO_RELEASE=20200826
-ARG ODOO_SHA=9fe7d55e64867d177519e99cc45f9ecfeb3746a3
+ARG ODOO_RELEASE=20210104
+ARG ODOO_SHA=15b85a12eb661426316e255cfc888a1ca0914db1
 RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
         && echo "${ODOO_SHA} odoo.deb" | sha1sum -c - \
         && apt-get update \
@@ -66,6 +67,10 @@ RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/od
         && rm -R /usr/lib/python3/dist-packages/odoo/addons/l10n_es \
         && git clone -b 13.0 https://github.com/OCA/queue.git /tmp/queue \
         && mv /tmp/queue/queue_job /usr/lib/python3/dist-packages/odoo/addons/ \
+        && mv /tmp/queue/queue_job_cron /usr/lib/python3/dist-packages/odoo/addons/ \
+        && mv /tmp/queue/queue_job_subscribe /usr/lib/python3/dist-packages/odoo/addons/ \
+        && mv /tmp/queue/base_import_async /usr/lib/python3/dist-packages/odoo/addons/ \
+        && mv /tmp/queue/base_export_async /usr/lib/python3/dist-packages/odoo/addons/ \
         && rm -R /tmp/queue \
         && git clone -b 13.0 https://github.com/OCA/connector.git /tmp/connector \
         && mv /tmp/connector/component /usr/lib/python3/dist-packages/odoo/addons/ \
