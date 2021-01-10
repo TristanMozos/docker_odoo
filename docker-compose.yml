@@ -1,27 +1,45 @@
-version: '2'
+version: '3'
 services:
+  nginx_13:
+      image: nginx
+      container_name: nginx_13
+      ports:
+        - "80:80"
+        - "443:443"
+      volumes:
+        - "./nginx/conf.d:/etc/nginx/conf.d"
+        - "./nginx/certs:/etc/nginx/ssl/"
+      depends_on:
+        - odoo
   odoo:
     build:
       context: .
       dockerfile: Dockerfile
-    image: odoo_test:13
+    image: odoo_test_13
     depends_on:
       - db
+  #    - wdb
     ports:
       - "0.0.0.0:8069:8069"
       - "127.0.0.1:6899:6899"
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo
     volumes:
-      - /opt/odoo-13/conf:/etc/odoo
-      - /opt/odoo-13/odoo_addons:/mnt/extra-addons
+      - ./conf:/etc/odoo
+      - ./odoo_addons:/mnt/extra-addons
+      - ./odoo/filestore:/var/lib/odoo
+      - ./wait-for-psql.py:/usr/local/bin/wait-for-psql.py
     privileged: true
-
   db:
-    image: postgres:latest
+    image: postgres:13
     ports:
       - "5432:5432"
     environment:
+      - POSTGRES_DB=postgres
       - POSTGRES_PASSWORD=odoo
       - POSTGRES_USER=odoo
+      - NETWORK_ACCESS=internal
     volumes:
-      - /opt/odoo-13/database/dev:/var/lib/postgresql/data
-
+      - ./database:/var/lib/postgresql/data
