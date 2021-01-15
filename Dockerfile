@@ -1,3 +1,4 @@
+
 FROM debian:buster-slim
 MAINTAINER Halltic eSolutions S.L. <info@halltic.com>
 
@@ -84,6 +85,7 @@ RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/od
         && rm -R /tmp/connector_ecommerce
 
 # Copy entrypoint script and Odoo configuration file
+RUN pip3 install num2words xlwt
 COPY ./entrypoint.sh /
 COPY ./odoo.conf /etc/odoo/
 
