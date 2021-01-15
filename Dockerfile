@@ -1,13 +1,10 @@
 FROM debian:buster-slim
-MAINTAINER Odoo S.A. <info@odoo.com>
+MAINTAINER Halltic eSolutions S.L. <info@halltic.com>
 
 SHELL ["/bin/bash", "-xo", "pipefail", "-c"]
 
 # Generate locale C.UTF-8 for postgres and general locale data
 ENV LANG C.UTF-8
-
-# Use backports to avoid install some libs with pip
-RUN echo 'deb http://deb.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/backports.list
 
 # Install some deps, lessc and less-plugin-clean-css, and wkhtmltopdf
 RUN apt-get update \
@@ -17,8 +14,9 @@ RUN apt-get update \
             dirmngr \
             fonts-noto-cjk \
             gnupg \
-            libssl1.0-dev \
+            libssl-dev \
             node-less \
+            npm \
             python3-num2words \
             python3-pip \
             python3-phonenumbers \
@@ -31,15 +29,18 @@ RUN apt-get update \
             python3-watchdog \
             python3-xlrd \
             python3-xlwt \
+            python3-boto3 \
+            python3-botocore \
             xz-utils \
-        && curl -o wkhtmltox.deb -sSL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb \
-        && echo '7e35a63f9db14f93ec7feeb0fce76b30c08f2057 wkhtmltox.deb' | sha1sum -c - \
+            git \
+        && curl -o wkhtmltox.deb -sSL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.buster_amd64.deb \
+        && echo 'ea8277df4297afc507c61122f3c349af142f31e5 wkhtmltox.deb' | sha1sum -c - \
         && apt-get install -y --no-install-recommends ./wkhtmltox.deb \
         && pip3 install cachetools \
         && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
 
 # install latest postgresql-client
-RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main' > /etc/apt/sources.list.d/pgdg.list \
+RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main' > /etc/apt/sources.list.d/pgdg.list \
         && GNUPGHOME="$(mktemp -d)" \
         && export GNUPGHOME \
         && repokey='B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8' \
@@ -52,19 +53,8 @@ RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main' > /etc
         && rm -f /etc/apt/sources.list.d/pgdg.list \
         && rm -rf /var/lib/apt/lists/*
 
-# Install rtlcss (on Debian stretch)
-RUN echo "deb http://deb.nodesource.com/node_8.x stretch main" > /etc/apt/sources.list.d/nodesource.list \
-    && GNUPGHOME="$(mktemp -d)" \
-    && export GNUPGHOME \
-    && repokey='9FD3B784BC1C6FC31A8A0A1C1655A0AB68576280' \
-    && gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "${repokey}" \
-    && gpg --batch --armor --export "${repokey}" > /etc/apt/trusted.gpg.d/nodejs.gpg.asc \
-    && gpgconf --kill all \
-    && rm -rf "$GNUPGHOME" \
-    && apt-get update \
-    && apt-get install --no-install-recommends -y nodejs \
-    && npm install -g rtlcss \
-    && rm -rf /var/lib/apt/lists/*
+# Install rtlcss (on Debian buster)
+RUN npm install -g rtlcss
 
 # Install Odoo
 ENV ODOO_VERSION 12.0
@@ -74,7 +64,24 @@ RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/od
         && echo "${ODOO_SHA} odoo.deb" | sha1sum -c - \
         && apt-get update \
         && apt-get -y install --no-install-recommends ./odoo.deb \
-        && rm -rf /var/lib/apt/lists/* odoo.deb
+        && rm -rf /var/lib/apt/lists/* odoo.deb \
+        && rm -R /usr/lib/python3/dist-packages/odoo/addons/l10n_es \
+        && git clone -b 12.0 https://github.com/OCA/queue.git /tmp/queue \
+        && mv /tmp/queue/queue_job /usr/lib/python3/dist-packages/odoo/addons/ \
+        && mv /tmp/queue/queue_job_cron /usr/lib/python3/dist-packages/odoo/addons/ \
+        && mv /tmp/queue/queue_job_subscribe /usr/lib/python3/dist-packages/odoo/addons/ \
+        && mv /tmp/queue/base_import_async /usr/lib/python3/dist-packages/odoo/addons/ \
+        && mv /tmp/queue/base_export_async /usr/lib/python3/dist-packages/odoo/addons/ \
+        && rm -R /tmp/queue \
+        && git clone -b 12.0 https://github.com/OCA/connector.git /tmp/connector \
+        && mv /tmp/connector/component /usr/lib/python3/dist-packages/odoo/addons/ \
+        && mv /tmp/connector/component_event /usr/lib/python3/dist-packages/odoo/addons/ \
+        && mv /tmp/connector/connector_base_product /usr/lib/python3/dist-packages/odoo/addons/ \
+        && mv /tmp/connector/connector /usr/lib/python3/dist-packages/odoo/addons/ \
+        && rm -R /tmp/connector \
+        && git clone -b 12.0 https://github.com/OCA/connector-ecommerce.git /tmp/connector_ecommerce \
+        && mv /tmp/connector_ecommerce/connector_ecommerce /usr/lib/python3/dist-packages/odoo/addons/ \
+        && rm -R /tmp/connector_ecommerce
 
 # Copy entrypoint script and Odoo configuration file
 COPY ./entrypoint.sh /
