@@ -37,6 +37,13 @@ RUN apt-get update \
         && echo 'ea8277df4297afc507c61122f3c349af142f31e5 wkhtmltox.deb' | sha1sum -c - \
         && apt-get install -y --no-install-recommends ./wkhtmltox.deb \
         && pip3 install cachetools \
+        && pip3 install unidecode \
+        && pip3 install zeep \
+        && pip3 install xmlsig>=0.1.2 \
+        && pip3 install paramiko \
+        && pip3 install pyOpenSSL \
+        && pip3 install pycryptodome \
+        && pip3 install xmlsec==1.3.3 \
         && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
 
 # install latest postgresql-client
