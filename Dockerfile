@@ -1,109 +1,107 @@
-FROM debian:stretch
-MAINTAINER Odoo S.A. <info@odoo.com>
+
+FROM debian:buster-slim
+MAINTAINER Halltic eSolutions S.L. <info@halltic.com>
+
+SHELL ["/bin/bash", "-xo", "pipefail", "-c"]
 
 # Generate locale C.UTF-8 for postgres and general locale data
 ENV LANG C.UTF-8
 
 # Install some deps, lessc and less-plugin-clean-css, and wkhtmltopdf
-RUN set -x; \
-        apt-get update \
+RUN apt-get update \
         && apt-get install -y --no-install-recommends \
             ca-certificates \
             curl \
+            dirmngr \
+            fonts-noto-cjk \
+            gnupg \
+            libssl-dev \
             node-less \
+            npm \
+            python3-num2words \
             python3-pip \
-            python3-setuptools \
+            python3-phonenumbers \
+            python3-pyldap \
+            python3-qrcode \
             python3-renderpm \
-            libssl1.0-dev \
-            xz-utils \
+            python3-setuptools \
+            python3-slugify \
+            python3-vobject \
             python3-watchdog \
+            python3-xlrd \
+            python3-xlwt \
+            python3-boto3 \
+            python3-botocore \
+            xz-utils \
             git \
-        && curl -o wkhtmltox.tar.xz -SL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz \
-        && echo '3f923f425d345940089e44c1466f6408b9619562 wkhtmltox.tar.xz' | sha1sum -c - \
-        && tar xvf wkhtmltox.tar.xz \
-        && cp wkhtmltox/lib/* /usr/local/lib/ \
-        && cp wkhtmltox/bin/* /usr/local/bin/ \
-        && cp -r wkhtmltox/share/man/man1 /usr/local/share/man/ \
-        && easy_install https://github.com/timotheus/ebaysdk-python/archive/master.zip \
-        && pip install ptvsd==3.0.0 pudb wdb
+        && curl -o wkhtmltox.deb -sSL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.buster_amd64.deb \
+        && echo 'ea8277df4297afc507c61122f3c349af142f31e5 wkhtmltox.deb' | sha1sum -c - \
+        && apt-get install -y --no-install-recommends ./wkhtmltox.deb \
+        && pip3 install cachetools \
+        && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
 
-# Debug Env
-ENV PUDB_RDB_HOST=0.0.0.0 \
-	PUDB_RDB_PORT=6899 \
-	UNACCENT=true \
-	WAIT_DB=true \
-	WDB_NO_BROWSER_AUTO_OPEN=True \
-	WDB_SOCKET_SERVER=wdb \
-	WDB_WEB_PORT=1984 \
-    WDB_WEB_SERVER=localhost
+# install latest postgresql-client
+RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main' > /etc/apt/sources.list.d/pgdg.list \
+        && GNUPGHOME="$(mktemp -d)" \
+        && export GNUPGHOME \
+        && repokey='B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8' \
+        && gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "${repokey}" \
+        && gpg --batch --armor --export "${repokey}" > /etc/apt/trusted.gpg.d/pgdg.gpg.asc \
+        && gpgconf --kill all \
+        && rm -rf "$GNUPGHOME" \
+        && apt-get update  \
+        && apt-get install --no-install-recommends -y postgresql-client \
+        && rm -f /etc/apt/sources.list.d/pgdg.list \
+        && rm -rf /var/lib/apt/lists/*
+
+# Install rtlcss (on Debian buster)
+RUN npm install -g rtlcss
 
 # Install Odoo
-ENV ODOO_VERSION 11.0
-ENV ODOO_RELEASE 20180808
-RUN set -x; \
-        curl -o odoo.deb -SL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
-        && echo 'a48d588b76fd642ac9e1af63a38e4d87ee20531a odoo.deb' | sha1sum -c - \
-        && dpkg --force-depends -i odoo.deb \
+ENV ODOO_VERSION 12.0
+ARG ODOO_RELEASE=20210111
+ARG ODOO_SHA=73dd74d0185588fbe052471217b28c1f796a542c
+RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
+        && echo "${ODOO_SHA} odoo.deb" | sha1sum -c - \
         && apt-get update \
-        && apt-get -y install -f --no-install-recommends \
+        && apt-get -y install --no-install-recommends ./odoo.deb \
         && rm -rf /var/lib/apt/lists/* odoo.deb \
-        && apt-get update \
-        && apt-get -y install -f --no-install-recommends \
-        && rm -rf /var/lib/apt/lists/* odoo.deb \
-        && rm -R /usr/lib/python2.7/dist-packages/odoo/addons/l10n_es \
-        && git clone -b 10.0 https://github.com/OCA/queue.git /tmp/queue \
-        && mv /tmp/queue/queue_job /usr/lib/python2.7/dist-packages/odoo/addons/ \
+        && rm -R /usr/lib/python3/dist-packages/odoo/addons/l10n_es \
+        && git clone -b 12.0 https://github.com/OCA/queue.git /tmp/queue \
+        && mv /tmp/queue/queue_job /usr/lib/python3/dist-packages/odoo/addons/ \
+        && mv /tmp/queue/queue_job_cron /usr/lib/python3/dist-packages/odoo/addons/ \
+        && mv /tmp/queue/queue_job_subscribe /usr/lib/python3/dist-packages/odoo/addons/ \
+        && mv /tmp/queue/base_import_async /usr/lib/python3/dist-packages/odoo/addons/ \
+        && mv /tmp/queue/base_export_async /usr/lib/python3/dist-packages/odoo/addons/ \
         && rm -R /tmp/queue \
-        && git clone -b 10.0 https://github.com/OCA/connector.git /tmp/connector \
-        && mv /tmp/connector/component /usr/lib/python2.7/dist-packages/odoo/addons/ \
-        && mv /tmp/connector/component_event /usr/lib/python2.7/dist-packages/odoo/addons/ \
-        && mv /tmp/connector/connector_base_product /usr/lib/python2.7/dist-packages/odoo/addons/ \
-        && mv /tmp/connector/connector /usr/lib/python2.7/dist-packages/odoo/addons/ \
+        && git clone -b 12.0 https://github.com/OCA/connector.git /tmp/connector \
+        && mv /tmp/connector/component /usr/lib/python3/dist-packages/odoo/addons/ \
+        && mv /tmp/connector/component_event /usr/lib/python3/dist-packages/odoo/addons/ \
+        && mv /tmp/connector/connector_base_product /usr/lib/python3/dist-packages/odoo/addons/ \
+        && mv /tmp/connector/connector /usr/lib/python3/dist-packages/odoo/addons/ \
         && rm -R /tmp/connector \
-        && git clone -b 10.0 https://github.com/OCA/connector-ecommerce.git /tmp/connector_ecommerce \
-        && mv /tmp/connector_ecommerce/connector_ecommerce /usr/lib/python2.7/dist-packages/odoo/addons/ \
-        && rm -R /tmp/connector_ecommerce \
-        && mkdir -p /opt/odoo/addons/l10n_es \
-        && git clone -b 10.0 https://github.com/OCA/l10n-spain.git /opt/odoo/addons/l10n_es \
-        && mkdir -p /opt/odoo/addons/partner-contact \
-        && git clone -b 10.0 https://github.com/OCA/partner-contact.git /opt/odoo/addons/partner-contact \
-        && mkdir -p /opt/odoo/addons/delivery-carrier \
-        && git clone -b 10.0 https://github.com/OCA/delivery-carrier.git /opt/odoo/addons/delivery-carrier \
-        && mkdir -p /opt/odoo/addons/sale-workflow \
-        && git clone -b 10.0 https://github.com/OCA/sale-workflow.git /opt/odoo/addons/sale-workflow \
-        && mkdir -p /opt/odoo/addons/product-attribute \
-        && git clone -b 10.0 https://github.com/OCA/product-attribute.git /opt/odoo/addons/product-attribute \
-        && git clone -b 10.0-product_dimension https://github.com/gurneyalex/product-attribute.git /tmp/product_attribute \
-        && rm -R /opt/odoo/addons/product-attribute/product_dimensions \
-        && mv /tmp/product_attribute/product_dimensions /opt/odoo/addons/product-attribute \
-        && rm -R /tmp/product_attribute \
-        && git clone -b release/10.0/SMD-216-product_multi_image https://github.com/LasLabs/product-attribute.git /tmp/product_attribute \
-        && rm -R /opt/odoo/addons/product-attribute/product_multi_image \
-        && mv /tmp/product_attribute/product_multi_image/ /opt/odoo/addons/product-attribute \
-        && rm -R /tmp/product_attribute \
-	    && mkdir -p /opt/odoo/addons/server-tools \
-        && git clone -b 10.0 https://github.com/OCA/server-tools.git /opt/odoo/addons/server-tools \
-        && mkdir -p /opt/odoo/addons/bank-payment \
-        && git clone -b 10.0 https://github.com/OCA/bank-payment.git /opt/odoo/addons/bank-payment \
-        && git clone -b 10.0 https://github.com/OCA/web.git /opt/odoo/addons/web \
-        && apt-get -y purge git
+        && git clone -b 12.0 https://github.com/OCA/connector-ecommerce.git /tmp/connector_ecommerce \
+        && mv /tmp/connector_ecommerce/connector_ecommerce /usr/lib/python3/dist-packages/odoo/addons/ \
+        && rm -R /tmp/connector_ecommerce
 
 # Copy entrypoint script and Odoo configuration file
 RUN pip3 install num2words xlwt
 COPY ./entrypoint.sh /
 COPY ./odoo.conf /etc/odoo/
-RUN chown odoo /etc/odoo/odoo.conf
 
 # Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
-RUN mkdir -p /mnt/extra-addons \
-        && chown -R odoo /mnt/extra-addons
+RUN chown odoo /etc/odoo/odoo.conf \
+    && mkdir -p /mnt/extra-addons \
+    && chown -R odoo /mnt/extra-addons
 VOLUME ["/var/lib/odoo", "/mnt/extra-addons"]
 
 # Expose Odoo services
-EXPOSE 8069 8071
+EXPOSE 8069 8071 8072
 
 # Set the default config file
 ENV ODOO_RC /etc/odoo/odoo.conf
+
+COPY wait-for-psql.py /usr/local/bin/wait-for-psql.py
 
 # Set default user when running the container
 USER odoo
