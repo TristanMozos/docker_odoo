@@ -31,7 +31,12 @@ RUN apt-get update \
             python3-xlwt \
             python3-boto3 \
             python3-botocore \
+            python3-dev \
             xz-utils \
+            libxml2-dev \
+            libxmlsec1-dev \
+            pkg-config \
+            build-essential \
             git \
         && curl -o wkhtmltox.deb -sSL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.buster_amd64.deb \
         && echo 'ea8277df4297afc507c61122f3c349af142f31e5 wkhtmltox.deb' | sha1sum -c - \
@@ -39,10 +44,11 @@ RUN apt-get update \
         && pip3 install cachetools \
         && pip3 install unidecode \
         && pip3 install zeep \
-        && pip3 install xmlsig>=0.1.2 \
+        && pip3 install xmlsig \
         && pip3 install paramiko \
         && pip3 install pyOpenSSL \
         && pip3 install pycryptodome \
+        && pip3 install wheel \
         && pip3 install xmlsec==1.3.3 \
         && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
 
@@ -76,9 +82,11 @@ RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/od
         && git clone -b 12.0 https://github.com/OCA/queue.git /tmp/queue \
         && mv /tmp/queue/queue_job /usr/lib/python3/dist-packages/odoo/addons/ \
         && mv /tmp/queue/queue_job_cron /usr/lib/python3/dist-packages/odoo/addons/ \
+        && mv /tmp/queue/queue_job_batch /usr/lib/python3/dist-packages/odoo/addons/ \
         && mv /tmp/queue/queue_job_subscribe /usr/lib/python3/dist-packages/odoo/addons/ \
         && mv /tmp/queue/base_import_async /usr/lib/python3/dist-packages/odoo/addons/ \
         && mv /tmp/queue/base_export_async /usr/lib/python3/dist-packages/odoo/addons/ \
+        && mv /tmp/queue/export_async_schedule /usr/lib/python3/dist-packages/odoo/addons/ \
         && rm -R /tmp/queue \
         && git clone -b 12.0 https://github.com/OCA/connector.git /tmp/connector \
         && mv /tmp/connector/component /usr/lib/python3/dist-packages/odoo/addons/ \
