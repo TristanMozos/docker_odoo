@@ -78,7 +78,6 @@ RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/od
         && apt-get update \
         && apt-get -y install --no-install-recommends ./odoo.deb \
         && rm -rf /var/lib/apt/lists/* odoo.deb \
-        && rm -R /usr/lib/python3/dist-packages/odoo/addons/l10n_es \
         && git clone -b 13.0 https://github.com/OCA/queue.git /tmp/queue \
         && mv /tmp/queue/queue_job /usr/lib/python3/dist-packages/odoo/addons/ \
         && mv /tmp/queue/queue_job_cron /usr/lib/python3/dist-packages/odoo/addons/ \
