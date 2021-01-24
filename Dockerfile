@@ -1,4 +1,3 @@
-
 FROM debian:buster-slim
 MAINTAINER Halltic eSolutions S.L. <info@halltic.com>
 
@@ -32,12 +31,26 @@ RUN apt-get update \
             python3-xlwt \
             python3-boto3 \
             python3-botocore \
+            python3-dev \
             xz-utils \
+            libxml2-dev \
+            libxmlsec1-dev \
+            pkg-config \
+            build-essential \
             git \
         && curl -o wkhtmltox.deb -sSL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.buster_amd64.deb \
         && echo 'ea8277df4297afc507c61122f3c349af142f31e5 wkhtmltox.deb' | sha1sum -c - \
         && apt-get install -y --no-install-recommends ./wkhtmltox.deb \
         && pip3 install cachetools \
+        && pip3 install unidecode \
+        && pip3 install zeep \
+        && pip3 install xmlsig \
+        && pip3 install paramiko \
+        && pip3 install pyOpenSSL \
+        && pip3 install pycryptodome \
+        && pip3 install wheel \
+        && pip3 install unicodecsv \
+        && pip3 install xmlsec==1.3.3 \
         && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
 
 # install latest postgresql-client
@@ -58,23 +71,22 @@ RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main' > /etc/
 RUN npm install -g rtlcss
 
 # Install Odoo
-ENV ODOO_VERSION 12.0
-ARG ODOO_RELEASE=20210111
-ARG ODOO_SHA=73dd74d0185588fbe052471217b28c1f796a542c
+ENV ODOO_VERSION 13.0
+ARG ODOO_RELEASE=20210104
+ARG ODOO_SHA=15b85a12eb661426316e255cfc888a1ca0914db1
 RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
         && echo "${ODOO_SHA} odoo.deb" | sha1sum -c - \
         && apt-get update \
         && apt-get -y install --no-install-recommends ./odoo.deb \
         && rm -rf /var/lib/apt/lists/* odoo.deb \
-        && rm -R /usr/lib/python3/dist-packages/odoo/addons/l10n_es \
-        && git clone -b 12.0 https://github.com/OCA/queue.git /tmp/queue \
+        && git clone -b 13.0 https://github.com/OCA/queue.git /tmp/queue \
         && mv /tmp/queue/queue_job /usr/lib/python3/dist-packages/odoo/addons/ \
         && mv /tmp/queue/queue_job_cron /usr/lib/python3/dist-packages/odoo/addons/ \
         && mv /tmp/queue/queue_job_subscribe /usr/lib/python3/dist-packages/odoo/addons/ \
         && mv /tmp/queue/base_import_async /usr/lib/python3/dist-packages/odoo/addons/ \
         && mv /tmp/queue/base_export_async /usr/lib/python3/dist-packages/odoo/addons/ \
         && rm -R /tmp/queue \
-        && git clone -b 12.0 https://github.com/OCA/connector.git /tmp/connector \
+        && git clone -b 13.0 https://github.com/OCA/connector.git /tmp/connector \
         && mv /tmp/connector/component /usr/lib/python3/dist-packages/odoo/addons/ \
         && mv /tmp/connector/component_event /usr/lib/python3/dist-packages/odoo/addons/ \
         && mv /tmp/connector/connector_base_product /usr/lib/python3/dist-packages/odoo/addons/ \
@@ -85,11 +97,10 @@ RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/od
         && rm -R /tmp/connector_ecommerce
 
 # Copy entrypoint script and Odoo configuration file
-RUN pip3 install num2words xlwt
 COPY ./entrypoint.sh /
 COPY ./odoo.conf /etc/odoo/
 
-# Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
+# Set permissions and Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
 RUN chown odoo /etc/odoo/odoo.conf \
     && mkdir -p /mnt/extra-addons \
     && chown -R odoo /mnt/extra-addons
@@ -101,7 +112,7 @@ EXPOSE 8069 8071 8072
 # Set the default config file
 ENV ODOO_RC /etc/odoo/odoo.conf
 
-COPY wait-for-psql.py /usr/local/bin/wait-for-psql.py
+COPY ./wait-for-psql.py /usr/local/bin/wait-for-psql.py
 
 # Set default user when running the container
 USER odoo
