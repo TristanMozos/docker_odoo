@@ -100,12 +100,8 @@ RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/od
         && git clone -b 13.0 https://github.com/OCA/connector.git /tmp/connector \
         && mv /tmp/connector/component /usr/lib/python3/dist-packages/odoo/addons/ \
         && mv /tmp/connector/component_event /usr/lib/python3/dist-packages/odoo/addons/ \
-        && mv /tmp/connector/connector_base_product /usr/lib/python3/dist-packages/odoo/addons/ \
         && mv /tmp/connector/connector /usr/lib/python3/dist-packages/odoo/addons/ \
-        && rm -R /tmp/connector \
-        && git clone -b 12.0 https://github.com/OCA/connector-ecommerce.git /tmp/connector_ecommerce \
-        && mv /tmp/connector_ecommerce/connector_ecommerce /usr/lib/python3/dist-packages/odoo/addons/ \
-        && rm -R /tmp/connector_ecommerce
+        && rm -R /tmp/connector
 
 # Copy entrypoint script and Odoo configuration file
 COPY ./entrypoint.sh /
