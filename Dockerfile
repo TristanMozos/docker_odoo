@@ -1,5 +1,5 @@
 FROM debian:buster-slim
-MAINTAINER Halltic eSolutions S.L. <info@halltic.com>
+MAINTAINER Halltic Tech S.L. <info@halltic.com>
 
 SHELL ["/bin/bash", "-xo", "pipefail", "-c"]
 
