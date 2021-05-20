@@ -15,6 +15,7 @@ RUN apt-get update \
             fonts-noto-cjk \
             gnupg \
             libssl-dev \
+            libffi-dev \
             node-less \
             npm \
             python3-num2words \
@@ -29,9 +30,8 @@ RUN apt-get update \
             python3-watchdog \
             python3-xlrd \
             python3-xlwt \
-            python3-boto3 \
-            python3-botocore \
             python3-dev \
+            cargo \
             xz-utils \
             libxml2-dev \
             libxmlsec1-dev \
@@ -73,8 +73,8 @@ RUN npm install -g rtlcss
 
 # Install Odoo
 ENV ODOO_VERSION 13.0
-ARG ODOO_RELEASE=20210204
-ARG ODOO_SHA=6b81cdf3ed67143010cc8fd6bfce71aa70febca8
+ARG ODOO_RELEASE=20210518
+ARG ODOO_SHA=3f034937d378bdf761a78c1e9723a54cef302dbd
 RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
         && echo "${ODOO_SHA} odoo.deb" | sha1sum -c - \
         && apt-get update \
