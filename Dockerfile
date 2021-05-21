@@ -48,7 +48,6 @@ RUN apt-get update && \
     && pip3 install wheel \
     && pip3 install unicodecsv \
     && pip3 install suds-py3 \
-    && pip3 install xmlsec==1.3.3 \
     && pip3 install ptvsd pudb wdb debugpy \
     && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
 
