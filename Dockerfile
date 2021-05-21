@@ -35,6 +35,17 @@ RUN apt-get update && \
     && curl -o wkhtmltox.deb -sSL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.buster_amd64.deb \
     && echo 'ea8277df4297afc507c61122f3c349af142f31e5 wkhtmltox.deb' | sha1sum -c - \
     && apt-get install -y --no-install-recommends ./wkhtmltox.deb \
+    && pip3 install cachetools \
+    && pip3 install unidecode \
+    && pip3 install zeep \
+    && pip3 install xmlsig \
+    && pip3 install paramiko \
+    && pip3 install pyOpenSSL \
+    && pip3 install pycryptodome \
+    && pip3 install wheel \
+    && pip3 install unicodecsv \
+    && pip3 install suds-py3 \
+    && pip3 install xmlsec==1.3.3 \
     && pip3 install ptvsd pudb wdb debugpy \
     && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
 
