@@ -15,6 +15,7 @@ RUN apt-get update && \
         fonts-noto-cjk \
         gnupg \
         libssl-dev \
+        libffi-dev \
         node-less \
         npm \
         python3-num2words \
@@ -30,6 +31,8 @@ RUN apt-get update && \
         python3-watchdog \
         python3-xlrd \
         python3-xlwt \
+        python3-dev \
+        cargo \
         xz-utils \
         git \
     && curl -o wkhtmltox.deb -sSL https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.buster_amd64.deb \
