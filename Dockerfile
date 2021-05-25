@@ -48,18 +48,7 @@ RUN apt-get update && \
     && pip3 install wheel \
     && pip3 install unicodecsv \
     && pip3 install suds-py3 \
-    && pip3 install ptvsd pudb wdb debugpy \
     && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
-
-# Debug Env	# Debug Env
-ENV PUDB_RDB_HOST=0.0.0.0 \
-	PUDB_RDB_PORT=6899 \
-	UNACCENT=true \
-	WAIT_DB=true \
-	WDB_NO_BROWSER_AUTO_OPEN=True \
-	WDB_SOCKET_SERVER=wdb \
-	WDB_WEB_PORT=1984 \
-	WDB_WEB_SERVER=localhost
 
 # install latest postgresql-client
 RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main' > /etc/apt/sources.list.d/pgdg.list \
