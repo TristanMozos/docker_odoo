@@ -2,7 +2,7 @@ version: '3'
 services:
   nginx_13:
       image: nginx
-      container_name: nginx_13
+      container_name: nginx_14
       ports:
         - "80:80"
         - "443:443"
@@ -15,7 +15,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: odoo_test_13
+    image: odoo_test_14
     depends_on:
       - db
   #    - wdb
@@ -31,6 +31,7 @@ services:
       - ./odoo_addons:/mnt/extra-addons
       - ./odoo/filestore:/var/lib/odoo
       - ./wait-for-psql.py:/usr/local/bin/wait-for-psql.py
+      - ./entrypoint.sh:/entrypoint.sh
     privileged: true
   db:
     image: postgres:13
