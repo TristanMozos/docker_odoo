@@ -32,6 +32,7 @@ RUN apt-get update && \
         python3-xlrd \
         python3-xlwt \
         python3-dev \
+        python3-paramiko \
         cargo \
         xz-utils \
         git \
@@ -42,7 +43,7 @@ RUN apt-get update && \
     && pip3 install unidecode \
     && pip3 install zeep \
     && pip3 install xmlsig \
-    && pip3 install paramiko \
+    #&& pip3 install paramiko \
     && pip3 install pyOpenSSL \
     && pip3 install pycryptodome \
     && pip3 install wheel \
