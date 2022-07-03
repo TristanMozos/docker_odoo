@@ -43,7 +43,7 @@ RUN apt-get update && \
     && pip3 install unidecode \
     && pip3 install zeep \
     && pip3 install xmlsig \
-    #&& pip3 install paramiko \
+    && pip3 install pysftp==0.2.8\
     && pip3 install pyOpenSSL \
     && pip3 install pycryptodome \
     && pip3 install wheel \
