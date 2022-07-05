@@ -15,7 +15,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: odoo_test_13
+    image: odoo__oficial_13
     depends_on:
       - db
     ports:
@@ -27,7 +27,7 @@ services:
       - PASSWORD=odoo
     volumes:
       - ./conf:/etc/odoo
-      - ./odoo_addons:/mnt/extra-addons
+      - ./odoo_addons_13:/mnt/extra-addons
       - ./odoo/filestore:/var/lib/odoo
       - ./wait-for-psql.py:/usr/local/bin/wait-for-psql.py
     privileged: true
@@ -41,4 +41,4 @@ services:
       - POSTGRES_USER=odoo
       - NETWORK_ACCESS=internal
     volumes:
-      - ./database:/var/lib/postgresql/data
+      - ./database_13:/var/lib/postgresql/data

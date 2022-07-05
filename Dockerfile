@@ -1,5 +1,5 @@
 FROM debian:buster-slim
-MAINTAINER Halltic eSolutions S.L. <info@halltic.com>
+MAINTAINER Halltic Tech S.L. <info@halltic.com>
 
 SHELL ["/bin/bash", "-xo", "pipefail", "-c"]
 
@@ -73,8 +73,8 @@ RUN npm install -g rtlcss
 
 # Install Odoo
 ENV ODOO_VERSION 13.0
-ARG ODOO_RELEASE=20210518
-ARG ODOO_SHA=3f034937d378bdf761a78c1e9723a54cef302dbd
+ARG ODOO_RELEASE=20220629
+ARG ODOO_SHA=e6873c12adae0dc8f8258d0e3b3d20f1f6408e4f
 RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
         && echo "${ODOO_SHA} odoo.deb" | sha1sum -c - \
         && apt-get update \
